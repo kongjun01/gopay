@@ -76,18 +76,17 @@ func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (orderStr st
 
 // alipay.trade.wap.pay(手机网站支付接口2.0)
 // 文档地址：https://opendocs.alipay.com/open/02ivbs
-func (a *Client) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
+func (a *Client) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl string, formHtml string, err error) {
 	bm.Set("product_code", "QUICK_WAP_WAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
-		return gopay.NULL, err
+		return gopay.NULL, gopay.NULL, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.wap.pay"); err != nil {
-		return gopay.NULL, err
-	}
+	bs, err = a.doAliPay(ctx, bm, "alipay.trade.wap.pay")
 	payUrl = string(bs)
-	return payUrl, nil
+	formHtml, err = a.pubParamsFormHtml(bm, "alipay.trade.wap.pay", bm.JsonBody())
+	return payUrl, formHtml, nil
 }
 
 // alipay.trade.page.pay(统一收单下单并支付页面接口)

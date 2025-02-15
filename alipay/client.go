@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-pay/crypto/aes"
@@ -152,6 +153,96 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 		a.logger.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 	return bm.EncodeURLParams(), nil
+}
+
+// 公共参数处理
+func (a *Client) pubParamsFormHtml(bm gopay.BodyMap, method, bizContent string, authToken ...string) (formHtml string, err error) {
+	pubBody := make(gopay.BodyMap)
+	pubBody.Set("app_id", a.AppId).
+		Set("method", method).
+		Set("format", "JSON").
+		Set("charset", a.Charset).
+		Set("sign_type", a.SignType).
+		Set("version", "1.0").
+		Set("timestamp", time.Now().Format(xtime.TimeLayout))
+
+	// 前置参数校验赋值
+	if a.AppCertSN != gopay.NULL {
+		pubBody.Set("app_cert_sn", a.AppCertSN)
+	}
+	if a.AliPayRootCertSN != gopay.NULL {
+		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+	}
+	// return_url
+	if a.ReturnUrl != gopay.NULL {
+		pubBody.Set("return_url", a.ReturnUrl)
+	}
+	// notify_url
+	if a.NotifyUrl != gopay.NULL {
+		pubBody.Set("notify_url", a.NotifyUrl)
+	}
+	// default use app_auth_token
+	if a.AppAuthToken != gopay.NULL {
+		pubBody.Set("app_auth_token", a.AppAuthToken)
+	}
+	if a.location != nil {
+		pubBody.Set("timestamp", time.Now().In(a.location).Format(xtime.TimeLayout))
+	}
+	if bm != nil {
+		// version
+		if version := bm.GetString("version"); version != gopay.NULL {
+			pubBody.Set("version", version)
+		}
+		if returnUrl := bm.GetString("return_url"); returnUrl != gopay.NULL {
+			pubBody.Set("return_url", returnUrl)
+		}
+		if notifyUrl := bm.GetString("notify_url"); notifyUrl != gopay.NULL {
+			pubBody.Set("notify_url", notifyUrl)
+		}
+		// if user set app_auth_token in body_map, use this
+		if aat := bm.GetString("app_auth_token"); aat != gopay.NULL {
+			pubBody.Set("app_auth_token", aat)
+		}
+	}
+	if len(authToken) > 0 {
+		pubBody.Set("auth_token", authToken[0])
+	}
+	if bizContent != gopay.NULL {
+		if a.aesKey == gopay.NULL {
+			pubBody.Set("biz_content", bizContent)
+		} else {
+			// AES Encrypt biz_content
+			encryptBizContent, err := a.encryptBizContent(bizContent)
+			if err != nil {
+				return "", fmt.Errorf("EncryptBizContent Error: %w", err)
+			}
+			if a.DebugSwitch == gopay.DebugOn {
+				a.logger.Debugf("Alipay_Origin_BizContent: %s", bizContent)
+				a.logger.Debugf("Alipay_Encrypt_BizContent: %s", encryptBizContent)
+			}
+			pubBody.Set("biz_content", encryptBizContent)
+		}
+	}
+	// sign
+	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"))
+	if err != nil {
+		return "", fmt.Errorf("GetRsaSign Error: %w", err)
+	}
+	pubBody.Set("sign", sign)
+	if a.DebugSwitch == gopay.DebugOn {
+		a.logger.Debugf("Alipay_Request: %s", pubBody.JsonBody())
+	}
+
+	// 拼接表单
+	var form strings.Builder
+	form.WriteString(fmt.Sprintf(`<form id='alipayForm'' action='%s'' method='post'>`, baseUrlUtf8))
+	for k, v := range pubBody {
+		form.WriteString(fmt.Sprintf(`<input type='hidden' name='%s' value='%s'>`, k, v.(string)))
+	}
+	form.WriteString(`<input type='submit' value='立即支付' style='display:none;'>`)
+	form.WriteString(`</form>`)
+	formHtml = form.String()
+	return
 }
 
 // 公共参数处理

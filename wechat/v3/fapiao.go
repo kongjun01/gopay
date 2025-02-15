@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-pay/gopay"
+	"github.com/kongjun01/gopay"
 )
 
 // 创建电子发票卡券模板

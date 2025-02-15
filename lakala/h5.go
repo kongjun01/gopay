@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/go-pay/gopay"
+	"github.com/kongjun01/gopay"
 )
 
 // 创建H5支付单

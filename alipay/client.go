@@ -10,10 +10,10 @@ import (
 	"github.com/go-pay/crypto/aes"
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/crypto/xrsa"
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/xlog"
 	"github.com/go-pay/xtime"
+	"github.com/kongjun01/gopay"
+	"github.com/kongjun01/gopay/pkg/xhttp"
 )
 
 type Client struct {

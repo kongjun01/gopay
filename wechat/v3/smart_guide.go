@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-pay/gopay"
+	"github.com/kongjun01/gopay"
 )
 
 // 服务人员注册API

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/go-pay/gopay"
+	"github.com/kongjun01/gopay"
 )
 
 // alipay.merchant.qipan.crowd.create(上传创建人群)

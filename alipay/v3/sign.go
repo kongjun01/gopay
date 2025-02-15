@@ -14,9 +14,9 @@ import (
 	"time"
 
 	"github.com/go-pay/crypto/xpem"
-	"github.com/go-pay/gopay"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
+	"github.com/kongjun01/gopay"
 )
 
 // v3 鉴权请求 Authorization Header

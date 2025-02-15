@@ -7,9 +7,9 @@ import (
 	"hash"
 	"sync"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/xlog"
+	"github.com/kongjun01/gopay"
+	"github.com/kongjun01/gopay/pkg/xhttp"
 )
 
 type Client struct {

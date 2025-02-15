@@ -588,7 +588,7 @@
 ## 版本号：Release 1.5.42
 
 * 修改记录：
-    * 迁移新仓库 https://github.com/go-pay/gopay
+    * 迁移新仓库 https://github.com/kongjun01/gopay
 
 ## 版本号：Release 1.5.41
 

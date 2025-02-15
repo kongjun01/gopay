@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/go-pay/gopay"
 	"github.com/go-pay/xlog"
+	"github.com/kongjun01/gopay"
 )
 
 func TestMerchantItemFileUpload(t *testing.T) {

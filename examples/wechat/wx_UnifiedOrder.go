@@ -4,10 +4,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/wechat"
 	"github.com/go-pay/util"
 	"github.com/go-pay/xlog"
+	"github.com/kongjun01/gopay"
+	"github.com/kongjun01/gopay/wechat"
 )
 
 func UnifiedOrder() {

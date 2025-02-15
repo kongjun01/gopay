@@ -13,8 +13,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/go-pay/gopay"
 	"github.com/go-pay/util"
+	"github.com/kongjun01/gopay"
 )
 
 // VerifySign 微信同步返回参数验签或异步通知参数验签

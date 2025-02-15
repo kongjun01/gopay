@@ -3,8 +3,8 @@ package apple
 import (
 	"testing"
 
-	"github.com/go-pay/gopay"
 	"github.com/go-pay/xlog"
+	"github.com/kongjun01/gopay"
 )
 
 func TestGetTransactionHistory(t *testing.T) {
